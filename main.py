@@ -49,17 +49,31 @@ def parse_num_lines(line):
     list_series.append([line[index:].strip(), line[:index].strip()])
 
 
+def parse(one_line):
+    if len(one_line) <= 2:
+        pass
+    if one_line[0].isdigit():
+        parse_num_lines(one_line)
+    else:
+        parse_str(one_line)
+
+
 if __name__ == "__main__":
     with open('data.txt') as f:
         content = f.readlines()
 
     for curr_line in content:
         curr_line = curr_line.replace('\n', '')
-        if len(curr_line) <= 2:
-            continue
-        if curr_line[0].isdigit():
-            parse_num_lines(curr_line)
+        word_list = curr_line.split('-')
+        curr_line = " ".join(word_list)
+        if len(re.findall(r"\d+", curr_line)) > 2:
+            lines = re.findall(r"[A-z]+\s\d*[A-z]+|\d+\s*[A-z|\s]*", curr_line)
+            for line in lines:
+                if len(line) > 2:
+                    parse(line)
         else:
-            parse_str(curr_line)
+            if len(curr_line) > 2:
+                parse(curr_line)
     df = pd.DataFrame(list_series, columns=['items', 'Quantity'])
     print(df)
+    df.to_csv('file.csv')
