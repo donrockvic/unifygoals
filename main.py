@@ -50,6 +50,11 @@ def parse_num_lines(line):
 
 
 def parse(one_line):
+    """
+    Function to parse the lines one by one
+    :param one_line:
+    :return:
+    """
     if len(one_line) <= 2:
         pass
     if one_line[0].isdigit():
