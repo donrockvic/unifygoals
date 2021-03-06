@@ -62,6 +62,22 @@ def parse(one_line):
     else:
         parse_str(one_line)
 
+def add_Qantity(df_col):
+	list_unit = []
+	for row in df_col:
+		doc = nlp(row)
+		for ent in doc.ents:
+			label = ent.label_
+		if label == 'CARDINAL':
+			list_unit.append('NaN')
+		else:
+			word = re.findall(r"[^\d]*", row)
+			for a in word:
+				if len(a)>1:
+					list_unit.append(a)
+	return list_unit
+
+
 
 if __name__ == "__main__":
     with open('data.txt') as f:
@@ -80,5 +96,7 @@ if __name__ == "__main__":
             if len(curr_line) > 2:
                 parse(curr_line)
     df = pd.DataFrame(list_series, columns=['items', 'Quantity'])
-    print(df)
+    df["unit"] = add_Qantity(df["Quantity"])
+
+    print(df.head(20))
     df.to_csv('file.csv')
